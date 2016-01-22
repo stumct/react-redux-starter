@@ -35,7 +35,7 @@ const common = {
         loader: 'file?name=[name].[ext]',
         include: PATHS.src
       },
-      // CSS and LESS loaders for styles
+      // CSS, LESS and SASS loaders for styles
       {
         test: /\.css$/, // Only .css files
         loader: 'style!css' // Run both loaders

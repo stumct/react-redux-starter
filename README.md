@@ -15,6 +15,7 @@ Dev Dependencies
   npm i extract-text-webpack-plugin --save (for creating css files)
 	npm i babel-loader babel-core --save-dev
 	npm i babel-preset-es2015 babel-preset-react --save-dev
+  npm i babel-preset-stage-0 --save-dev
   //npm i babel-loader@5.x --save-dev (babel transpiles es6+ to es5)
   //npm i babel-plugin-react-transform@v1.1.1 react-transform-hmr --save-dev (this one works)
   npm i babel-eslint eslint eslint-plugin-react --save-dev (for linting JS)
@@ -23,7 +24,7 @@ Dev Dependencies
 Dependencies
   npm i react react-dom --save (install React and ReactDOM)
   npm i jquery --save ()
-  npm i bootstrap --save ()
+  npm i bootstrap-sass --save ()
   npm i redux react-redux redux-thunk --save
   npm i react-router history redux-simple-router --save
 
