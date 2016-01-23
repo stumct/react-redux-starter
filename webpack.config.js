@@ -1,36 +1,34 @@
-const webpack = require('webpack');
-const merge = require('webpack-merge');
-const path = require('path');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+var webpack = require('webpack');
+var merge = require('webpack-merge');
+var path = require('path');
+
+var dev_config = require('./webpack/dev.webpack.config.js');
+var prod_config = require('./webpack/prod.webpack.config.js');
 
 const TARGET = process.env.npm_lifecycle_event;
+
 const PATHS = {
   src: path.join(__dirname, 'src'),
   dist: path.join(__dirname, 'dist'),
   node_modules_dir: path.resolve(__dirname, 'node_modules')
 };
 
-const common = {
+var base_config = {
   context: __dirname,
   entry: {
-    javascript: PATHS.src + '/main.js',
-    vendor: ['react', 'react-dom', 'jquery'], //not used currently, could be removed
-    html: PATHS.src + '/index.html'
+    javascript: PATHS.src + '/index.jsx',
+    html: PATHS.src + '/index.html',
   },
   output: {
-    filename: 'bundle.js',
     path: PATHS.dist,
+    filename: 'bundle.js'
   },
   module: {
-    loaders: [
-      // Babel for JS and JSX transpiling
-      {
+    loaders: [{
         test: /\.(js|jsx)$/,
-        exclude: [PATHS.node_modules_dir, PATHS.dist],
-        loaders: ['babel-loader'],
-      },
-      // Path loaders to copy files to dist
-      {
+        include: PATHS.src,
+        loader: 'babel'
+      }, {
         test: /\.html$/,
         loader: 'file?name=[name].[ext]',
         include: PATHS.src
@@ -46,7 +44,6 @@ const common = {
         test: /\.scss$/,
         loader: 'style!css!sass'
       },
-
       //image loader - will inline images less than 8kb
       {
         test: /\.(png|jpg)$/,
@@ -69,54 +66,20 @@ const common = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin("styles.css"),
-    new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js", Infinity),
-    new webpack.ProvidePlugin({
-      "$": "jquery",
-      "jQuery": "jquery"
-    })
-  ]
-}
+  new webpack.ProvidePlugin({
+    "$": "jquery",
+    "jQuery": "jquery"
+  })
+]
+
+};
 
 
 
-// Default configuration
 if (TARGET === 'start' || !TARGET) {
-
-  module.exports = merge(common, {
-    devServer: {
-      historyApiFallback: true,
-      hot: true,
-      inline: true,
-      progress: true,
-      // Display only errors to reduce the amount of output.
-      stats: 'errors-only',
-      // Parse host and port from env so this is easy to customize.
-      host: process.env.HOST,
-      port: process.env.PORT
-    },
-    plugins: [
-      new webpack.HotModuleReplacementPlugin()
-    ],
-    module: {
-      preLoaders: [
-        // ESLint preloader for linting
-        {
-          test: /\.(js|jsx)$/,
-          loaders: ['eslint'],
-          include: PATHS.src
-        }
-      ],
-    }
-  });
+  module.exports = merge(base_config, dev_config);
 }
 
-if (TARGET === 'build') {
-  module.exports = merge(common, {
-    plugins: [
-            new webpack.optimize.UglifyJsPlugin({
-              minimize: true
-            })
-    ]
-  });
+if (TARGET === 'deploy') {
+  module.exports = merge(base_config, prod_config);
 }

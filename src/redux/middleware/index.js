@@ -1,4 +1,4 @@
-import {logger} from './logger.js';
-import {thunk} from './thunk.js';
+import logger from './logger.js';
+import thunk from './thunk.js';
 
-export default {logger, thunk};
+module.exports = {logger, thunk};
